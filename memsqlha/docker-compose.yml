@@ -8,8 +8,6 @@ services:
     networks:
       memsql-lan:
         ipv4_address: ${LEAF2_IP}
-    ports:
-     - "${LEAF2_MEMSQLPORT}:3306"
     stop_grace_period: 1m
   leaf1:
     image: "memsqlbase"
@@ -18,16 +16,22 @@ services:
     networks:
       memsql-lan:
         ipv4_address: ${LEAF1_IP}
-    ports:
-     - "${LEAF1_MEMSQLPORT}:3306"
+    stop_grace_period: 1m
+  clientAggregator:
+    image: "memsqlbase"
+    environment:
+      - AGGREGATOR=False
+    networks:
+      memsql-lan:
+        ipv4_address: ${CLIENTAGGREGATOR_IP}
     stop_grace_period: 1m
   host:
     image: "memsqlbase"
     environment:
      - AGGREGATOR=True
      - AGGREGATOR_IP=${AGGREGATOR_IP}
-     - LEAF1_IP=${LEAF1_IP}
-     - LEAF2_IP=${LEAF2_IP}
+     - ENV_CLIENT_AGGREGATORS=${ENV_CLIENT_AGGREGATORS}
+     - ENV_LEAVES=${ENV_LEAVES}
      - PASSWORD=${PASSWORD}
      - VERSION=${VERSION}
      - LICENSE=${LICENSE}
