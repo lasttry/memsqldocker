@@ -1,0 +1,27 @@
+version: '3'
+services:
+  host:
+    image: "memsqlbase"
+    networks:
+      memsql-lan:
+        ipv4_address: 172.18.0.14
+    ports:
+     - "222:22"
+     - "8080:8080"
+    storage_opt:
+     - size: '20G'
+  leaf1:
+    image: "memsqlbase"
+    networks:
+      memsql-lan:
+        ipv4_address: 172.18.0.15
+  leaf2:
+    image: "memsqlbase"
+    networks:
+      memsql-lan:
+        ipv4_address: 172.18.0.16
+
+networks:
+  memsql-lan:
+    external:
+      name: memsql-lan

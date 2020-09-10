@@ -1,0 +1,65 @@
+version: '3.4'
+
+services:
+  leaf4:
+    image: "memsqlbase"
+    environment:
+      - AGGREGATOR=False
+    networks:
+      memsql-lan:
+        ipv4_address: ${LEAF4_IP}
+    stop_grace_period: 1m
+  leaf3:
+    image: "memsqlbase"
+    environment:
+      - AGGREGATOR=False
+    networks:
+      memsql-lan:
+        ipv4_address: ${LEAF3_IP}
+    stop_grace_period: 1m
+  leaf2:
+    image: "memsqlbase"
+    environment:
+      - AGGREGATOR=False
+    networks:
+      memsql-lan:
+        ipv4_address: ${LEAF2_IP}
+    stop_grace_period: 1m
+  leaf1:
+    image: "memsqlbase"
+    environment:
+     - AGGREGATOR=False
+    networks:
+      memsql-lan:
+        ipv4_address: ${LEAF1_IP}
+    stop_grace_period: 1m
+  clientAggregator:
+    image: "memsqlbase"
+    environment:
+      - AGGREGATOR=False
+    networks:
+      memsql-lan:
+        ipv4_address: ${CLIENTAGGREGATOR_IP}
+    stop_grace_period: 1m
+  host:
+    image: "memsqlbase"
+    environment:
+     - AGGREGATOR=True
+     - AGGREGATOR_IP=${AGGREGATOR_IP}
+     - ENV_CLIENT_AGGREGATORS=${ENV_CLIENT_AGGREGATORS}
+     - ENV_LEAVES=${ENV_LEAVES}
+     - PASSWORD=${PASSWORD}
+     - VERSION=${VERSION}
+     - LICENSE=${LICENSE}
+    networks:
+      memsql-lan:
+        ipv4_address: ${AGGREGATOR_IP}
+    ports:
+     - "${AGGREGATOR_SSHPORT}:22"
+     - "${AGGREGATOR_STUDIOPORT}:8080"
+     - "${AGGREGATOR_MEMSQLPORT}:3306"
+    stop_grace_period: 1m
+networks:
+  memsql-lan:
+    external:
+      name: memsql-lan
